@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { FaFolderOpen, FaDownload } from "react-icons/fa";
 
 export default function Hero() {
@@ -25,25 +24,15 @@ export default function Hero() {
           The Fox
         </motion.p>
 
-        {/* Name with image */}
-        <motion.div
-          className="flex flex-col items-center gap-4 sm:flex-row sm:gap-5 md:gap-6"
+        {/* Name */}
+        <motion.h1
+          className="font-[family-name:var(--font-bebas)] text-4xl leading-tight tracking-wide text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.6 }}
         >
-          <Image
-            src="/faheemud.png"
-            alt="Faheemudheen"
-            width={80}
-            height={80}
-            className="h-16 w-16 rounded-full drop-shadow-[0_0_20px_rgba(228,111,32,0.3)] sm:h-[70px] sm:w-[70px] md:h-20 md:w-20"
-            priority
-          />
-          <h1 className="font-[family-name:var(--font-bebas)] text-4xl leading-tight tracking-wide text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
-            Faheemudheen
-          </h1>
-        </motion.div>
+          Faheemudheen
+        </motion.h1>
 
         {/* Subtitle */}
         <motion.p
