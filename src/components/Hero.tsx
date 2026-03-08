@@ -8,16 +8,16 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex min-h-screen items-center justify-center overflow-hidden px-6"
+      className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-16 sm:px-6 md:px-8 lg:px-12"
     >
       {/* Gradient orbs */}
-      <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-fox-orange/5 blur-[120px]" />
-      <div className="absolute -bottom-40 -right-40 h-[400px] w-[400px] rounded-full bg-fox-orange/8 blur-[100px]" />
+      <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full bg-fox-orange/5 blur-[120px] sm:-left-40 sm:-top-40 sm:h-[500px] sm:w-[500px]" />
+      <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-fox-orange/8 blur-[100px] sm:-bottom-40 sm:-right-40 sm:h-[400px] sm:w-[400px]" />
 
-      <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
+      <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
         {/* THE FOX label */}
         <motion.p
-          className="mb-6 font-[family-name:var(--font-bebas)] text-lg tracking-[0.4em] text-fox-orange uppercase"
+          className="mb-4 font-[family-name:var(--font-bebas)] text-base tracking-[0.3em] text-fox-orange uppercase sm:mb-6 sm:text-lg sm:tracking-[0.4em]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.4 }}
@@ -27,7 +27,7 @@ export default function Hero() {
 
         {/* Name with image */}
         <motion.div
-          className="flex items-center gap-5"
+          className="flex flex-col items-center gap-4 sm:flex-row sm:gap-5 md:gap-6"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.6 }}
@@ -35,19 +35,19 @@ export default function Hero() {
           <Image
             src="/faheemud.png"
             alt="Faheemudheen"
-            width={70}
-            height={70}
-            className="rounded-full drop-shadow-[0_0_20px_rgba(228,111,32,0.3)]"
+            width={80}
+            height={80}
+            className="h-16 w-16 rounded-full drop-shadow-[0_0_20px_rgba(228,111,32,0.3)] sm:h-[70px] sm:w-[70px] md:h-20 md:w-20"
             priority
           />
-          <h1 className="font-[family-name:var(--font-bebas)] text-5xl leading-tight tracking-wide text-white sm:text-6xl md:text-7xl lg:text-8xl">
-            Faheemudheen N
+          <h1 className="font-[family-name:var(--font-bebas)] text-4xl leading-tight tracking-wide text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
+            Faheemudheen
           </h1>
         </motion.div>
 
         {/* Subtitle */}
         <motion.p
-          className="mt-5 text-lg font-medium text-fox-orange sm:text-xl"
+          className="mt-4 px-4 text-base font-medium text-fox-orange sm:mt-5 sm:text-lg md:text-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.8 }}
@@ -58,7 +58,7 @@ export default function Hero() {
 
         {/* Description */}
         <motion.p
-          className="mt-5 max-w-xl text-base leading-relaxed text-slate-400"
+          className="mt-4 max-w-2xl px-4 text-sm leading-relaxed text-slate-400 sm:mt-5 sm:text-base md:max-w-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 3.0 }}
@@ -70,7 +70,7 @@ export default function Hero() {
 
         {/* Divider */}
         <motion.div
-          className="mt-8 h-px w-32 bg-gradient-to-r from-transparent via-fox-orange/40 to-transparent"
+          className="mt-6 h-px w-24 bg-gradient-to-r from-transparent via-fox-orange/40 to-transparent sm:mt-8 sm:w-32"
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ duration: 0.8, delay: 3.1 }}
@@ -78,14 +78,14 @@ export default function Hero() {
 
         {/* CTA Buttons */}
         <motion.div
-          className="mt-8 flex flex-col gap-4 sm:flex-row"
+          className="mt-6 flex w-full flex-col gap-3 px-4 sm:mt-8 sm:w-auto sm:flex-row sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 3.2 }}
         >
           <a
             href="#projects"
-            className="group flex items-center gap-2 rounded-lg bg-fox-surface px-6 py-3 text-sm font-medium text-white transition-all hover:bg-fox-surface/80 hover:shadow-[0_0_20px_rgba(228,111,32,0.15)]"
+            className="group flex items-center justify-center gap-2 rounded-lg bg-fox-surface px-6 py-3 text-sm font-medium text-white transition-all hover:bg-fox-surface/80 hover:shadow-[0_0_20px_rgba(228,111,32,0.15)] sm:px-7 sm:py-3.5 md:text-base"
           >
             <FaFolderOpen className="text-fox-orange" />
             View Projects
@@ -93,7 +93,7 @@ export default function Hero() {
           <a
             href="/Faheemudheen Resume.pdf"
             download
-            className="group flex items-center gap-2 rounded-lg bg-slate-700/60 px-6 py-3 text-sm font-medium text-slate-200 transition-all hover:bg-slate-600/60"
+            className="group flex items-center justify-center gap-2 rounded-lg bg-slate-700/60 px-6 py-3 text-sm font-medium text-slate-200 transition-all hover:bg-slate-600/60 sm:px-7 sm:py-3.5 md:text-base"
           >
             <FaDownload className="text-slate-400" />
             Download CV
