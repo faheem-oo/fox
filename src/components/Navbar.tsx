@@ -62,7 +62,7 @@ export default function Navbar() {
             className="transition-transform duration-300 group-hover:scale-110 rounded-full"
           />
           <span className="font-[family-name:var(--font-bebas)] text-xl tracking-wider text-white">
-            THE FOX
+            FLARON TECH
           </span>
         </a>
 
