@@ -14,7 +14,7 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
-  title: "Faheemudheen  — The Fox Developer",
+  title: "Faheemudheen  — Fox",
   description:
     "Full Stack Developer portfolio — Building smart, efficient and scalable web applications.",
   keywords: [
