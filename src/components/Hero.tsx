@@ -21,7 +21,7 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 2.4 }}
         >
-          The Fox
+          Fox
         </motion.p>
 
         {/* Name */}
