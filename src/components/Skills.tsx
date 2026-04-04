@@ -44,9 +44,9 @@ const skillCategories = [
   {
     title: "Developer Tools",
     skills: [
-      { name: "Git", icon: FaGitAlt, color: "#F05032" },
+     
       { name: "Vercel", icon: SiVercel, color: "#ffffff" },
-      { name: "PhpMyAdmin", icon: TbDatabaseCog, color: "#6C78AF" },
+      
       { name: "MAMP", icon: FaDatabase, color: "#02749C" },
     ],
   },
