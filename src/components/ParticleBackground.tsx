@@ -19,10 +19,58 @@ interface PointerState {
   active: boolean;
 }
 
+interface QualityProfile {
+  count: number;
+  linkDistance: number;
+  maxLinks: number;
+  pointerRadius: number;
+  speedLimit: number;
+  targetFrameMs: number;
+  lineWidth: number;
+}
+
 const MAX_DPR = 2;
+const WRAP_PADDING = 30;
+const DESKTOP_FRAME_MS = 1000 / 48;
+const MOBILE_FRAME_MS = 1000 / 30;
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
+}
+
+function getQualityProfile(
+  width: number,
+  height: number,
+  coarsePointer: boolean
+): QualityProfile {
+  const compact = width < 900;
+  const largeDesktop = !coarsePointer && width >= 1280;
+  const divisor = coarsePointer
+    ? 22000
+    : compact
+      ? 18000
+      : largeDesktop
+        ? 11500
+        : 14500;
+  const count = clamp(
+    Math.floor((width * height) / divisor),
+    coarsePointer ? 34 : compact ? 48 : largeDesktop ? 92 : 64,
+    coarsePointer ? 120 : compact ? 170 : largeDesktop ? 320 : 220
+  );
+
+  return {
+    count,
+    linkDistance: coarsePointer ? 106 : compact ? 132 : largeDesktop ? 174 : 154,
+    maxLinks: coarsePointer ? 3 : compact ? 4 : largeDesktop ? 7 : 5,
+    pointerRadius: coarsePointer ? 0 : compact ? 130 : 175,
+    speedLimit: coarsePointer ? 0.42 : compact ? 0.52 : 0.6,
+    targetFrameMs: coarsePointer
+      ? MOBILE_FRAME_MS
+      : largeDesktop
+        ? 1000 / 42
+        : DESKTOP_FRAME_MS,
+    lineWidth: coarsePointer ? 0.58 : largeDesktop ? 0.74 : 0.7,
+  };
 }
 
 export default function ParticleBackground() {
@@ -33,11 +81,20 @@ export default function ParticleBackground() {
   const viewportRef = useRef({ width: 0, height: 0, dpr: 1 });
   const reducedMotionRef = useRef(false);
   const coarsePointerRef = useRef(false);
+  const qualityRef = useRef<QualityProfile>({
+    count: 70,
+    linkDistance: 130,
+    maxLinks: 3,
+    pointerRadius: 140,
+    speedLimit: 0.55,
+    targetFrameMs: DESKTOP_FRAME_MS,
+    lineWidth: 0.68,
+  });
+  const lastFrameRef = useRef(0);
+  const pageVisibleRef = useRef(true);
 
   const initParticles = useCallback((width: number, height: number) => {
-    const coarsePointer = coarsePointerRef.current;
-    const divisor = coarsePointer ? 17000 : 11000;
-    const count = clamp(Math.floor((width * height) / divisor), 70, 240);
+    const count = qualityRef.current.count;
     const baseHues = [24, 30, 36, 42, 188, 196, 204, 212, 222, 232];
     const particles: Particle[] = [];
 
@@ -45,10 +102,10 @@ export default function ParticleBackground() {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
+        vx: (Math.random() - 0.5) * 0.26,
+        vy: (Math.random() - 0.5) * 0.26,
         size: Math.random() * 2 + 0.9,
-        alpha: Math.random() * 0.46 + 0.28,
+        alpha: Math.random() * 0.5 + 0.3,
         hue: baseHues[Math.floor(Math.random() * baseHues.length)],
         twinkleOffset: Math.random() * Math.PI * 2,
       });
@@ -73,6 +130,9 @@ export default function ParticleBackground() {
       const width = window.innerWidth;
       const height = window.innerHeight;
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const coarsePointer = coarsePointerRef.current;
+
+      qualityRef.current = getQualityProfile(width, height, coarsePointer);
 
       viewportRef.current = { width, height, dpr };
 
@@ -106,6 +166,13 @@ export default function ParticleBackground() {
       pointerRef.current.active = false;
     };
 
+    const onVisibilityChange = () => {
+      pageVisibleRef.current = !document.hidden;
+      if (document.hidden) {
+        pointerRef.current.active = false;
+      }
+    };
+
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -114,46 +181,73 @@ export default function ParticleBackground() {
     window.addEventListener("blur", onPointerLeave);
     reducedMotionQuery.addEventListener("change", onReducedMotionChange);
     coarsePointerQuery.addEventListener("change", onCoarsePointerChange);
+    document.addEventListener("visibilitychange", onVisibilityChange);
 
     const animate = (time: number) => {
       const { width, height } = viewportRef.current;
+      const quality = qualityRef.current;
+
+      if (time - lastFrameRef.current < quality.targetFrameMs) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const dt = lastFrameRef.current
+        ? Math.min((time - lastFrameRef.current) / 16.6667, 2)
+        : 1;
+      lastFrameRef.current = time;
+
+      if (!pageVisibleRef.current) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
       const particles = particlesRef.current;
       const pointer = pointerRef.current;
       const coarsePointer = coarsePointerRef.current;
       const reducedMotion = reducedMotionRef.current;
-      const linkDistance = coarsePointer ? 130 : 180;
-      const pointerRadius = coarsePointer ? 120 : 205;
+      const linkDistance = quality.linkDistance;
+      const pointerRadius = quality.pointerRadius;
       const pointerRadiusSq = pointerRadius * pointerRadius;
 
       ctx.clearRect(0, 0, width, height);
 
       for (const p of particles) {
         if (!reducedMotion) {
-          p.x += p.vx;
-          p.y += p.vy;
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
 
-          if (p.x < -30) p.x = width + 30;
-          if (p.x > width + 30) p.x = -30;
-          if (p.y < -30) p.y = height + 30;
-          if (p.y > height + 30) p.y = -30;
+          if (p.x < -WRAP_PADDING) p.x = width + WRAP_PADDING;
+          if (p.x > width + WRAP_PADDING) p.x = -WRAP_PADDING;
+          if (p.y < -WRAP_PADDING) p.y = height + WRAP_PADDING;
+          if (p.y > height + WRAP_PADDING) p.y = -WRAP_PADDING;
 
-          if (pointer.active && !coarsePointer) {
+          if (pointer.active && !coarsePointer && pointerRadius > 0) {
             const dx = pointer.x - p.x;
             const dy = pointer.y - p.y;
             const distanceSq = dx * dx + dy * dy;
 
             if (distanceSq > 0.001 && distanceSq < pointerRadiusSq) {
               const distance = Math.sqrt(distanceSq);
-              const force = (1 - distance / pointerRadius) * 0.13;
+              const force = (1 - distance / pointerRadius) * 0.11 * dt;
               p.vx -= (dx / distance) * force;
               p.vy -= (dy / distance) * force;
             }
           }
 
-          p.vx = clamp(p.vx + (Math.random() - 0.5) * 0.0035, -0.72, 0.72);
-          p.vy = clamp(p.vy + (Math.random() - 0.5) * 0.0035, -0.72, 0.72);
-          p.vx *= 0.986;
-          p.vy *= 0.986;
+          const noise = coarsePointer ? 0.0022 : 0.003;
+          p.vx = clamp(
+            p.vx + (Math.random() - 0.5) * noise,
+            -quality.speedLimit,
+            quality.speedLimit
+          );
+          p.vy = clamp(
+            p.vy + (Math.random() - 0.5) * noise,
+            -quality.speedLimit,
+            quality.speedLimit
+          );
+          p.vx *= coarsePointer ? 0.99 : 0.988;
+          p.vy *= coarsePointer ? 0.99 : 0.988;
         }
 
         const twinkle = 0.7 + Math.sin(time * 0.001 + p.twinkleOffset) * 0.3;
@@ -165,35 +259,62 @@ export default function ParticleBackground() {
         ctx.fill();
       }
 
-      const maxLinks = coarsePointer ? 4 : 8;
+      const grid = new Map<string, number[]>();
+      const cellSize = linkDistance;
+
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+        const gx = Math.floor(p.x / cellSize);
+        const gy = Math.floor(p.y / cellSize);
+        const key = `${gx},${gy}`;
+        const bucket = grid.get(key);
+        if (bucket) {
+          bucket.push(i);
+        } else {
+          grid.set(key, [i]);
+        }
+      }
 
       for (let i = 0; i < particles.length; i++) {
         const a = particles[i];
         let linksDrawn = 0;
+        const gx = Math.floor(a.x / cellSize);
+        const gy = Math.floor(a.y / cellSize);
 
-        for (let j = i + 1; j < particles.length; j++) {
-          if (linksDrawn >= maxLinks) break;
+        for (let ox = -1; ox <= 1; ox++) {
+          if (linksDrawn >= quality.maxLinks) break;
 
-          const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+          for (let oy = -1; oy <= 1; oy++) {
+            if (linksDrawn >= quality.maxLinks) break;
 
-          if (distance < linkDistance) {
-            const baseOpacity = (1 - distance / linkDistance) * 0.17;
-            const opacity = Math.max(0.02, baseOpacity);
-            const averageHue = (a.hue + b.hue) / 2;
-            const isWarmLink = averageHue < 90;
+            const bucket = grid.get(`${gx + ox},${gy + oy}`);
+            if (!bucket) continue;
 
-            ctx.strokeStyle = isWarmLink
-              ? `rgba(255, 176, 96, ${opacity.toFixed(4)})`
-              : `rgba(126, 190, 255, ${opacity.toFixed(4)})`;
-            ctx.lineWidth = 0.75;
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.stroke();
-            linksDrawn += 1;
+            for (const j of bucket) {
+              if (j <= i || linksDrawn >= quality.maxLinks) continue;
+
+              const b = particles[j];
+              const dx = a.x - b.x;
+              const dy = a.y - b.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance >= linkDistance) continue;
+
+              const baseOpacity = (1 - distance / linkDistance) * 0.18;
+              const opacity = Math.max(0.018, baseOpacity);
+              const averageHue = (a.hue + b.hue) / 2;
+              const isWarmLink = averageHue < 90;
+
+              ctx.strokeStyle = isWarmLink
+                ? `rgba(255, 176, 96, ${opacity.toFixed(4)})`
+                : `rgba(126, 190, 255, ${opacity.toFixed(4)})`;
+              ctx.lineWidth = quality.lineWidth;
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.stroke();
+              linksDrawn += 1;
+            }
           }
         }
       }
@@ -211,6 +332,7 @@ export default function ParticleBackground() {
       window.removeEventListener("blur", onPointerLeave);
       reducedMotionQuery.removeEventListener("change", onReducedMotionChange);
       coarsePointerQuery.removeEventListener("change", onCoarsePointerChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       cancelAnimationFrame(animationRef.current);
     };
   }, [initParticles]);

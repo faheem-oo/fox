@@ -8,7 +8,18 @@ export default function Loader() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2200);
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const compactScreen = window.innerWidth < 768;
+    const lowPowerDevice = (navigator.hardwareConcurrency ?? 8) <= 4;
+    const hideAfter = prefersReducedMotion
+      ? 450
+      : compactScreen || lowPowerDevice
+        ? 1050
+        : 1600;
+
+    const timer = setTimeout(() => setLoading(false), hideAfter);
     return () => clearTimeout(timer);
   }, []);
 

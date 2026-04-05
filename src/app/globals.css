@@ -114,6 +114,8 @@ body {
   gap: 0.95rem;
   padding-inline: 0.95rem;
   animation: skills-scroll 34s linear infinite;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
 }
 
 .skills-dynamic-shell:hover .skills-track {
@@ -180,6 +182,7 @@ body {
   transform: perspective(700px) rotateX(66deg) translateY(-8%);
   mix-blend-mode: screen;
   animation: ambient-grid-drift 26s linear infinite;
+  will-change: transform;
 }
 
 .ambient-orb {
@@ -360,6 +363,41 @@ body {
   }
 }
 
+@media (max-width: 1024px) {
+  .ambient-grid {
+    opacity: 0.24;
+    animation-duration: 34s;
+  }
+
+  .ambient-orb {
+    filter: blur(74px);
+    opacity: 0.3;
+  }
+
+  .skills-track {
+    animation-duration: 40s;
+  }
+}
+
+@media (pointer: coarse) {
+  .ambient-grid {
+    animation: none;
+    opacity: 0.14;
+  }
+
+  .ambient-orb {
+    filter: blur(58px);
+    opacity: 0.24;
+    animation-duration: 24s;
+  }
+
+  .skills-card:hover {
+    transform: none;
+    border-color: rgba(71, 85, 105, 0.56);
+    background: rgba(3, 12, 23, 0.72);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ambient-grid,
   .ambient-orb {
@@ -375,7 +413,6 @@ body {
     mask-image: none;
   }
 
-  .skills-track,
   .skills-track {
     animation: none;
     width: auto;
