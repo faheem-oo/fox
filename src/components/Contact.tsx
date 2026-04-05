@@ -2,6 +2,7 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import Image from "next/image";
 import {
   FaPhone,
   FaEnvelope,
@@ -50,9 +51,17 @@ const contactLinks = [
   },
 ];
 
+const footerNavLinks = [
+  { label: "About", href: "#about" },
+  { label: "Skills", href: "#skills" },
+  { label: "Projects", href: "#projects" },
+  { label: "Contact", href: "#contact" },
+];
+
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const socialLinks = contactLinks.filter((link) => link.href.startsWith("http"));
 
   return (
     <section id="contact" className="relative py-24 px-6">
@@ -108,18 +117,94 @@ export default function Contact() {
       </div>
 
       {/* Footer */}
-     <motion.div
-  className="mx-auto mt-20 max-w-4xl border-t border-slate-700/50 pt-8 text-center"
-  initial={{ opacity: 0 }}
-  animate={inView ? { opacity: 1 } : {}}
-  transition={{ delay: 0.8 }}
->
-  <div className="flex flex-col items-center justify-center gap-3">
-    <p className="text-sm text-slate-500 text-center">
-      © {new Date().getFullYear()} Faheemudheen N. All rights reserved.
-    </p>
-  </div>
-</motion.div>
+      <motion.footer
+        className="relative mx-auto mt-24 max-w-6xl overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/40 p-6 sm:p-8"
+        initial={{ opacity: 0, y: 24 }}
+        animate={inView ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.6, delay: 0.8 }}
+      >
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(228,111,32,0.16),transparent_42%),radial-gradient(circle_at_80%_82%,rgba(56,189,248,0.14),transparent_40%)]" />
+
+        <div className="relative grid gap-8 md:grid-cols-[1.2fr_0.85fr_1fr]">
+          <div>
+            <a href="#hero" className="inline-flex items-center gap-3">
+              <Image
+                src="/faheemud.png"
+                alt="Faheemudheen Logo"
+                width={44}
+                height={44}
+                className="rounded-full border border-fox-orange/40 bg-slate-900/70 p-1"
+              />
+              <div>
+                <p className="font-[family-name:var(--font-bebas)] text-2xl tracking-wide text-white">
+                  FLARON TECH
+                </p>
+                <p className="text-[11px] tracking-[0.24em] text-slate-500 uppercase">
+                  Build. Scale. Ship.
+                </p>
+              </div>
+            </a>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
+              Crafting dependable full-stack products with clean architecture,
+              pragmatic design, and performance-focused engineering.
+            </p>
+          </div>
+
+          <div>
+            <p className="font-[family-name:var(--font-bebas)] text-lg tracking-wider text-fox-orange">
+              Quick Links
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {footerNavLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="rounded-full border border-slate-600/70 px-3 py-1.5 text-xs text-slate-300 transition-all hover:border-fox-orange/70 hover:text-fox-orange"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <p className="font-[family-name:var(--font-bebas)] text-lg tracking-wider text-fox-orange">
+              Connect
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={link.label}
+                  className="group flex h-10 w-10 items-center justify-center rounded-lg border border-slate-600/70 bg-slate-800/60 text-slate-300 transition-all hover:-translate-y-0.5 hover:border-fox-orange/60 hover:text-fox-orange"
+                >
+                  <link.icon className="text-base" />
+                </a>
+              ))}
+            </div>
+            <a
+              href="mailto:n.faheemudheen@gmail.com"
+              className="mt-4 inline-block text-sm text-slate-400 transition-colors hover:text-white"
+            >
+              n.faheemudheen@gmail.com
+            </a>
+          </div>
+        </div>
+
+        <div className="relative mt-8 flex flex-col gap-3 border-t border-slate-700/60 pt-5 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Faheemudheen N. All rights reserved.</p>
+          <a
+            href="#hero"
+            className="inline-flex items-center gap-2 text-slate-400 transition-colors hover:text-fox-orange"
+          >
+            Back to top
+            <span aria-hidden="true">↑</span>
+          </a>
+        </div>
+      </motion.footer>
     </section>
   );
 }

@@ -42,7 +42,7 @@ export default function Loader() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1, duration: 0.5 }}
           >
-            THE FOX DEVELOPER
+            FOX
           </motion.p>
 
           {/* Loading bar */}

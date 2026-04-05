@@ -2,55 +2,50 @@
 
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import type { IconType } from "react-icons";
 import {
-  FaHtml5,
-  FaCss3Alt,
+  FaDatabase,
+  FaGitAlt,
   FaPhp,
   FaReact,
-  FaGitAlt,
-  FaDatabase,
+  FaServer,
 } from "react-icons/fa";
 import {
-  SiNextdotjs,
-  SiVercel,
+  SiMongodb,
   SiMysql,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiTailwindcss,
+  SiTypescript,
+  SiVercel,
 } from "react-icons/si";
-import { VscVscode } from "react-icons/vsc";
-import { TbBrandJavascript, TbBrandMongodb, TbDatabaseCog } from "react-icons/tb";
+import { TbBrandJavascript } from "react-icons/tb";
 
-const skillCategories = [
-  {
-    title: "Programming",
-    skills: [
+interface SkillItem {
+  name: string;
+  icon: IconType;
+  color: string;
+}
 
-      { name: "JavaScript", icon: TbBrandJavascript, color: "#F7DF1E" },
-      { name: "PHP", icon: FaPhp, color: "#777BB4" },
-    ],
-  },
-  {
-    title: "Frameworks",
-    skills: [
-      { name: "React.js", icon: FaReact, color: "#61DAFB" },
-      { name: "Next.js", icon: SiNextdotjs, color: "#ffffff" },
-    ],
-  },
-  {
-    title: "Databases",
-    skills: [
-      { name: "MySQL", icon: SiMysql, color: "#4479A1" },
-      { name: "MongoDB", icon: TbBrandMongodb, color: "#47A248" },
-    ],
-  },
-  {
-    title: "Developer Tools",
-    skills: [
-     
-      { name: "Vercel", icon: SiVercel, color: "#ffffff" },
-      
-      { name: "MAMP", icon: FaDatabase, color: "#02749C" },
-    ],
-  },
+const skills: SkillItem[] = [
+  { name: "Next.js", icon: SiNextdotjs, color: "#ffffff" },
+  { name: "React", icon: FaReact, color: "#61dafb" },
+  { name: "TypeScript", icon: SiTypescript, color: "#3178c6" },
+  { name: "Node.js", icon: SiNodedotjs, color: "#3c873a" },
+  { name: "MySQL", icon: SiMysql, color: "#4479a1" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47a248" },
+  { name: "Tailwind", icon: SiTailwindcss, color: "#06b6d4" },
+  { name: "JavaScript", icon: TbBrandJavascript, color: "#f7df1e" },
+  { name: "PHP", icon: FaPhp, color: "#777bb4" },
+  { name: "Git", icon: FaGitAlt, color: "#f1502f" },
+  { name: "Vercel", icon: SiVercel, color: "#ffffff" },
+  { name: "phpMyAdmin", icon: FaDatabase, color: "#f39c12" },
+  { name: "XAMPP", icon: FaServer, color: "#fb7a24" },
 ];
+
+function loopSkills(skills: SkillItem[]) {
+  return [...skills, ...skills];
+}
 
 export default function Skills() {
   const ref = useRef(null);
@@ -74,41 +69,28 @@ export default function Skills() {
           </h2>
         </motion.div>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {skillCategories.map((category, catIdx) => (
-            <motion.div
-              key={category.title}
-              className="glass glass-hover rounded-2xl p-6 transition-all duration-300"
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + catIdx * 0.15 }}
-            >
-              <h3 className="mb-6 font-[family-name:var(--font-bebas)] text-xl tracking-wider text-fox-orange">
-                {category.title}
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {category.skills.map((skill, skillIdx) => (
-                  <motion.div
-                    key={skill.name}
-                    className="group flex items-center gap-3 rounded-xl bg-fox-dark/50 p-3 transition-all duration-300 hover:bg-fox-dark hover:shadow-[0_0_15px_rgba(228,111,32,0.1)]"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{
-                      duration: 0.4,
-                      delay: 0.3 + catIdx * 0.15 + skillIdx * 0.05,
-                    }}
-                  >
-                    <skill.icon
-                      className="text-xl transition-transform duration-300 group-hover:scale-110"
-                      style={{ color: skill.color }}
-                    />
-                    <span className="text-sm text-slate-300">{skill.name}</span>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <motion.div
+          className="skills-dynamic-shell"
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <div className="skills-marquee">
+            <div className="skills-track">
+              {loopSkills(skills).map((skill, index) => (
+                <div
+                  key={`${skill.name}-${index}`}
+                  className="skills-card"
+                >
+                  <div className="skills-card-icon" style={{ color: skill.color }}>
+                    <skill.icon />
+                  </div>
+                  <p className="skills-card-label">{skill.name}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -9,10 +9,6 @@ export default function Hero() {
       id="hero"
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-16 sm:px-6 md:px-8 lg:px-12"
     >
-      {/* Gradient orbs */}
-      <div className="absolute -left-20 -top-20 h-[300px] w-[300px] rounded-full bg-fox-orange/5 blur-[120px] sm:-left-40 sm:-top-40 sm:h-[500px] sm:w-[500px]" />
-      <div className="absolute -bottom-20 -right-20 h-[300px] w-[300px] rounded-full bg-fox-orange/8 blur-[100px] sm:-bottom-40 sm:-right-40 sm:h-[400px] sm:w-[400px]" />
-
       <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center text-center">
         {/* THE FOX label */}
         <motion.p

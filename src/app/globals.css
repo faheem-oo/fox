@@ -15,21 +15,47 @@ html {
 }
 
 body {
+  min-height: 100vh;
+  overflow-x: hidden;
   background-color: #001f3f;
+  background-image:
+    radial-gradient(
+      1100px 700px at 12% -10%,
+      rgba(78, 142, 255, 0.22),
+      rgba(78, 142, 255, 0) 62%
+    ),
+    radial-gradient(
+      900px 600px at 90% 8%,
+      rgba(65, 199, 255, 0.2),
+      rgba(65, 199, 255, 0) 68%
+    ),
+    linear-gradient(160deg, #010812 0%, #031627 46%, #001f3f 100%);
   color: #e2e8f0;
   font-family: var(--font-body);
-  cursor: none;
+  cursor: auto;
+}
+
+@media (pointer: fine) {
+  html,
+  body,
+  * {
+    cursor: none !important;
+  }
 }
 
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #001f3f;
+}
+
 ::-webkit-scrollbar-thumb {
   background: #e46f20;
-  border-radius: 4px;}
+  border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #f09048;
 }
@@ -63,13 +89,295 @@ body {
   background-clip: text;
 }
 
-a, button, input, textarea, select, [role="button"] {
-  cursor: none;
+.skills-dynamic-shell {
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid rgba(71, 85, 105, 0.65);
+  background:
+    radial-gradient(circle at 10% 0%, rgba(26, 60, 98, 0.42), transparent 48%),
+    radial-gradient(circle at 92% 100%, rgba(228, 111, 32, 0.14), transparent 42%),
+    rgba(2, 18, 35, 0.62);
+  box-shadow:
+    inset 0 1px 0 rgba(148, 163, 184, 0.1),
+    0 22px 45px rgba(2, 6, 23, 0.35);
 }
 
-@media (pointer: coarse) {
-  body,
-  a, button, input, textarea, select, [role="button"] {
-    cursor: auto;
+.skills-marquee {
+  overflow: hidden;
+  padding: 1.15rem 0;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+}
+
+.skills-track {
+  display: flex;
+  width: max-content;
+  gap: 0.95rem;
+  padding-inline: 0.95rem;
+  animation: skills-scroll 34s linear infinite;
+}
+
+.skills-dynamic-shell:hover .skills-track {
+  animation-play-state: paused;
+}
+
+.skills-card {
+  display: flex;
+  min-width: 110px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(71, 85, 105, 0.56);
+  background: rgba(3, 12, 23, 0.72);
+  padding: 0.75rem 0.85rem;
+  transition: transform 220ms ease, border-color 220ms ease, background-color 220ms ease;
+}
+
+.skills-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.58);
+  background: rgba(4, 18, 34, 0.84);
+}
+
+.skills-card-icon {
+  display: flex;
+  height: 2.35rem;
+  width: 2.35rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(100, 116, 139, 0.5);
+  font-size: 1.3rem;
+  background: rgba(7, 16, 28, 0.75);
+}
+
+.skills-card-label {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(226, 232, 240, 0.86);
+  white-space: nowrap;
+}
+
+@keyframes skills-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ambient-grid {
+  position: absolute;
+  inset: -40% -20% 0;
+  background-image:
+    linear-gradient(to right, rgba(124, 163, 222, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(124, 163, 222, 0.08) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.35;
+  transform-origin: 50% 0;
+  transform: perspective(700px) rotateX(66deg) translateY(-8%);
+  mix-blend-mode: screen;
+  animation: ambient-grid-drift 26s linear infinite;
+}
+
+.ambient-orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(88px);
+  opacity: 0.42;
+  mix-blend-mode: screen;
+  will-change: transform, opacity;
+  animation: ambient-orb-float 18s ease-in-out infinite;
+}
+
+.ambient-orb-a {
+  left: -14%;
+  top: -8%;
+  width: clamp(300px, 38vw, 700px);
+  height: clamp(300px, 38vw, 700px);
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(88, 154, 255, 0.86),
+    rgba(88, 154, 255, 0) 68%
+  );
+}
+
+.ambient-orb-b {
+  right: -16%;
+  top: 18%;
+  width: clamp(280px, 34vw, 620px);
+  height: clamp(280px, 34vw, 620px);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(68, 152, 255, 0.72),
+    rgba(52, 133, 255, 0) 70%
+  );
+  animation-duration: 24s;
+  animation-delay: -5s;
+}
+
+.ambient-orb-c {
+  left: 25%;
+  bottom: -22%;
+  width: clamp(280px, 40vw, 760px);
+  height: clamp(280px, 40vw, 760px);
+  background: radial-gradient(
+    circle at 45% 40%,
+    rgba(24, 235, 193, 0.52),
+    rgba(12, 224, 180, 0) 72%
+  );
+  animation-duration: 20s;
+  animation-delay: -11s;
+}
+
+.ambient-orb-d {
+  left: 42%;
+  top: -20%;
+  width: clamp(220px, 30vw, 560px);
+  height: clamp(220px, 30vw, 560px);
+  background: radial-gradient(
+    circle at 40% 35%,
+    rgba(66, 226, 255, 0.58),
+    rgba(66, 226, 255, 0) 72%
+  );
+  animation-duration: 22s;
+  animation-delay: -8s;
+}
+
+.ambient-orb-e {
+  right: 24%;
+  bottom: -18%;
+  width: clamp(240px, 32vw, 620px);
+  height: clamp(240px, 32vw, 620px);
+  background: radial-gradient(
+    circle at 50% 45%,
+    rgba(88, 130, 255, 0.52),
+    rgba(88, 130, 255, 0) 70%
+  );
+  animation-duration: 26s;
+  animation-delay: -14s;
+}
+
+.ambient-orb-f {
+  left: -8%;
+  top: 38%;
+  width: clamp(220px, 30vw, 560px);
+  height: clamp(220px, 30vw, 560px);
+  background: radial-gradient(
+    circle at 45% 40%,
+    rgba(247, 151, 82, 0.5),
+    rgba(247, 151, 82, 0) 72%
+  );
+  animation-duration: 21s;
+  animation-delay: -9s;
+}
+
+.ambient-orb-g {
+  right: -6%;
+  top: -10%;
+  width: clamp(230px, 31vw, 600px);
+  height: clamp(230px, 31vw, 600px);
+  background: radial-gradient(
+    circle at 36% 34%,
+    rgba(230, 111, 32, 0.46),
+    rgba(230, 111, 32, 0) 70%
+  );
+  animation-duration: 25s;
+  animation-delay: -16s;
+}
+
+.ambient-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 36%,
+    rgba(0, 0, 0, 0.42) 100%
+  );
+}
+
+@keyframes ambient-grid-drift {
+  0% {
+    transform: perspective(700px) rotateX(66deg) translate3d(0, -8%, 0);
+  }
+  50% {
+    transform: perspective(700px) rotateX(66deg) translate3d(-2%, -12%, 0);
+  }
+  100% {
+    transform: perspective(700px) rotateX(66deg) translate3d(-4%, -8%, 0);
+  }
+}
+
+@keyframes ambient-orb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.24;
+  }
+  35% {
+    transform: translate3d(4%, -6%, 0) scale(1.06);
+    opacity: 0.32;
+  }
+  70% {
+    transform: translate3d(-3%, 5%, 0) scale(0.94);
+    opacity: 0.2;
+  }
+}
+
+@media (max-width: 768px) {
+  .ambient-grid {
+    opacity: 0.2;
+    background-size: 52px 52px;
+    animation-duration: 32s;
+  }
+
+  .ambient-orb {
+    filter: blur(66px);
+    opacity: 0.32;
+  }
+
+  .skills-track {
+    gap: 0.75rem;
+    animation-duration: 30s;
+  }
+
+  .skills-card {
+    min-width: 96px;
+    padding: 0.65rem 0.72rem;
+  }
+
+  .skills-card-icon {
+    height: 2.1rem;
+    width: 2.1rem;
+    font-size: 1.15rem;
+  }
+
+  .skills-card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-grid,
+  .ambient-orb {
+    animation: none;
+  }
+
+  .ambient-grid {
+    opacity: 0.2;
+  }
+
+  .skills-marquee {
+    overflow-x: auto;
+    mask-image: none;
+  }
+
+  .skills-track,
+  .skills-track {
+    animation: none;
+    width: auto;
   }
 }
