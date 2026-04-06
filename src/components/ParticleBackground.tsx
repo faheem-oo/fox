@@ -134,19 +134,21 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
     const resizeCanvas = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+      const dprLimit = lite ? 1.25 : MAX_DPR;
+      const dpr = Math.min(window.devicePixelRatio || 1, dprLimit);
       const coarsePointer = coarsePointerRef.current;
 
       const baseQuality = getQualityProfile(width, height, coarsePointer || lite);
       qualityRef.current = lite
         ? {
             ...baseQuality,
-            count: clamp(Math.floor((width * height) / 26000), 24, 96),
-            linkDistance: Math.min(baseQuality.linkDistance, 112),
+            count: clamp(Math.floor((width * height) / 29000), 26, 84),
+            linkDistance: Math.min(baseQuality.linkDistance, 116),
             maxLinks: Math.min(baseQuality.maxLinks, 2),
             pointerRadius: 0,
-            targetFrameMs: LITE_FRAME_MS,
-            lineWidth: 0.56,
+            speedLimit: Math.min(baseQuality.speedLimit, 0.38),
+            targetFrameMs: Math.max(LITE_FRAME_MS, MOBILE_FRAME_MS),
+            lineWidth: 0.54,
           }
         : baseQuality;
 
@@ -363,10 +365,7 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
       <div className="ambient-orb ambient-orb-e" />
       <div className="ambient-orb ambient-orb-f" />
       <div className="ambient-orb ambient-orb-g" />
-      <canvas
-        ref={canvasRef}
-        className={`absolute inset-0 h-full w-full ${lite ? "opacity-80" : ""}`}
-      />
+      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
       <div className="ambient-vignette" />
     </div>
   );
