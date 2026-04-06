@@ -43,8 +43,8 @@ export default function Loader({ onComplete }: LoaderProps) {
       {loading && (
         <motion.div
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-fox-bg"
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* Logo */}
           <motion.div

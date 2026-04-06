@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -22,6 +23,7 @@ const ParticleBackground = dynamic(
 
 export default function Home() {
   const [loaderDone, setLoaderDone] = useState(false);
+  const [contentReady, setContentReady] = useState(false);
   const [backgroundReady, setBackgroundReady] = useState(false);
   const [coarsePointer, setCoarsePointer] = useState(() => {
     if (typeof window === "undefined") return false;
@@ -53,6 +55,15 @@ export default function Home() {
   useEffect(() => {
     if (!loaderDone) return;
 
+    const revealDelay = coarsePointer ? 80 : 40;
+    const timer = window.setTimeout(() => setContentReady(true), revealDelay);
+
+    return () => window.clearTimeout(timer);
+  }, [coarsePointer, loaderDone]);
+
+  useEffect(() => {
+    if (!loaderDone) return;
+
     const startDelay = coarsePointer ? 180 : 0;
     const timer = window.setTimeout(() => setBackgroundReady(true), startDelay);
 
@@ -64,10 +75,22 @@ export default function Home() {
       <Loader onComplete={() => setLoaderDone(true)} />
 
       {loaderDone && !coarsePointer && <CustomCursor />}
-      {loaderDone && backgroundReady && <ParticleBackground />}
+      {loaderDone && backgroundReady && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.45, ease: "easeOut" }}
+        >
+          <ParticleBackground />
+        </motion.div>
+      )}
 
-      {loaderDone && (
-        <>
+      {loaderDone && contentReady && (
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
           <Navbar />
           <main className="relative z-10">
             <Hero />
@@ -78,7 +101,7 @@ export default function Home() {
             <FoxPhilosophy />
             <Contact />
           </main>
-        </>
+        </motion.div>
       )}
     </>
   );
