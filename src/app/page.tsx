@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
+import Loader from "@/components/Loader";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -12,7 +13,6 @@ import Projects from "@/components/Projects";
 import FoxPhilosophy from "@/components/FoxPhilosophy";
 import Contact from "@/components/Contact";
 
-const Loader = dynamic(() => import("@/components/Loader"), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
 });
@@ -70,7 +70,7 @@ export default function Home() {
         animate={
           loaderDone
             ? { opacity: 1, y: 0, filter: "blur(0px)" }
-            : { opacity: 0, y: 10, filter: "blur(6px)" }
+            : { opacity: 0.88, y: 4, filter: "blur(1px)" }
         }
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         style={{ pointerEvents: loaderDone ? "auto" : "none" }}

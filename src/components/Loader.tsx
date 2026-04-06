@@ -38,8 +38,14 @@ export default function Loader({ onComplete }: LoaderProps) {
     };
   }, [loading]);
 
+  useEffect(() => {
+    if (!loading) {
+      onComplete?.();
+    }
+  }, [loading, onComplete]);
+
   return (
-    <AnimatePresence onExitComplete={onComplete}>
+    <AnimatePresence>
       {loading && (
         <motion.div
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-fox-bg"
