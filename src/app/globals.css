@@ -470,6 +470,13 @@ body {
   }
 }
 
+@media (pointer: coarse) and (max-width: 768px) {
+  .ambient-orb,
+  .ambient-lite .ambient-orb {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ambient-grid,
   .ambient-orb {

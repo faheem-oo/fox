@@ -33,6 +33,7 @@ const MAX_DPR = 2;
 const WRAP_PADDING = 30;
 const DESKTOP_FRAME_MS = 1000 / 48;
 const MOBILE_FRAME_MS = 1000 / 30;
+const LITE_FRAME_MS = 1000 / 24;
 
 function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
@@ -119,8 +120,6 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
   }, []);
 
   useEffect(() => {
-    if (lite) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -138,7 +137,18 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
       const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
       const coarsePointer = coarsePointerRef.current;
 
-      qualityRef.current = getQualityProfile(width, height, coarsePointer);
+      const baseQuality = getQualityProfile(width, height, coarsePointer || lite);
+      qualityRef.current = lite
+        ? {
+            ...baseQuality,
+            count: clamp(Math.floor((width * height) / 26000), 24, 96),
+            linkDistance: Math.min(baseQuality.linkDistance, 112),
+            maxLinks: Math.min(baseQuality.maxLinks, 2),
+            pointerRadius: 0,
+            targetFrameMs: LITE_FRAME_MS,
+            lineWidth: 0.56,
+          }
+        : baseQuality;
 
       viewportRef.current = { width, height, dpr };
 
@@ -210,7 +220,7 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
 
       const particles = particlesRef.current;
       const pointer = pointerRef.current;
-      const coarsePointer = coarsePointerRef.current;
+      const coarsePointer = coarsePointerRef.current || lite;
       const reducedMotion = reducedMotionRef.current;
       const linkDistance = quality.linkDistance;
       const pointerRadius = quality.pointerRadius;
@@ -353,7 +363,10 @@ export default function ParticleBackground({ lite = false }: ParticleBackgroundP
       <div className="ambient-orb ambient-orb-e" />
       <div className="ambient-orb ambient-orb-f" />
       <div className="ambient-orb ambient-orb-g" />
-      {!lite && <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />}
+      <canvas
+        ref={canvasRef}
+        className={`absolute inset-0 h-full w-full ${lite ? "opacity-80" : ""}`}
+      />
       <div className="ambient-vignette" />
     </div>
   );
