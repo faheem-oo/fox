@@ -14,10 +14,10 @@ export default function Loader() {
     const compactScreen = window.innerWidth < 768;
     const lowPowerDevice = (navigator.hardwareConcurrency ?? 8) <= 4;
     const hideAfter = prefersReducedMotion
-      ? 450
+      ? 800
       : compactScreen || lowPowerDevice
-        ? 1050
-        : 1600;
+        ? 1500
+        : 2400;
 
     const timer = setTimeout(() => setLoading(false), hideAfter);
     return () => clearTimeout(timer);
