@@ -187,7 +187,7 @@ export default function Contact() {
             </div>
             <a
               href="mailto:n.faheemudheen@gmail.com"
-              className="mt-4 inline-block text-sm text-slate-400 transition-colors hover:text-white"
+              className="mt-4 inline-block break-all text-sm text-slate-400 transition-colors hover:text-white"
             >
               n.faheemudheen@gmail.com
             </a>

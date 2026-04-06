@@ -51,9 +51,9 @@ export default function Navbar() {
       animate={{ y: 0 }}
       transition={{ duration: 0.6, delay: 2.2 }}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6">
         {/* Logo */}
-        <a href="#hero" className="flex items-center gap-2 group">
+        <a href="#hero" className="group flex min-w-0 items-center gap-2">
           <Image
             src="/faheemud.png"
             alt="Faheemudheen Logo"
@@ -61,7 +61,7 @@ export default function Navbar() {
             height={40}
             className="transition-transform duration-300 group-hover:scale-110 rounded-full"
           />
-          <span className="font-[family-name:var(--font-bebas)] text-xl tracking-wider text-white">
+          <span className="max-w-[55vw] truncate font-[family-name:var(--font-bebas)] text-lg tracking-wider text-white sm:max-w-none sm:text-xl">
             FLARON TECH
           </span>
         </a>
@@ -89,7 +89,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="flex flex-col gap-1.5 md:hidden"
+          className="ml-3 flex shrink-0 flex-col gap-1.5 md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >

@@ -12,10 +12,13 @@
 
 html {
   scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   min-height: 100vh;
+  max-width: 100%;
   overflow-x: hidden;
   background-color: #001f3f;
   background-image:
@@ -33,6 +36,13 @@ body {
   color: #e2e8f0;
   font-family: var(--font-body);
   cursor: auto;
+}
+
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 @media (pointer: fine) {
