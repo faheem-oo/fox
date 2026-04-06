@@ -311,6 +311,25 @@ body {
   );
 }
 
+.ambient-lite .ambient-grid {
+  animation: none;
+  opacity: 0.14;
+}
+
+.ambient-lite .ambient-orb {
+  animation: none;
+  filter: blur(44px);
+  opacity: 0.2;
+}
+
+.ambient-lite .ambient-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0) 46%,
+    rgba(0, 0, 0, 0.24) 100%
+  );
+}
+
 @keyframes ambient-grid-drift {
   0% {
     transform: perspective(700px) rotateX(66deg) translate3d(0, -8%, 0);

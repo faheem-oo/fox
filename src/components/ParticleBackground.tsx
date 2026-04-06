@@ -73,7 +73,11 @@ function getQualityProfile(
   };
 }
 
-export default function ParticleBackground() {
+interface ParticleBackgroundProps {
+  lite?: boolean;
+}
+
+export default function ParticleBackground({ lite = false }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
   const particlesRef = useRef<Particle[]>([]);
@@ -115,6 +119,8 @@ export default function ParticleBackground() {
   }, []);
 
   useEffect(() => {
+    if (lite) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -335,10 +341,10 @@ export default function ParticleBackground() {
       document.removeEventListener("visibilitychange", onVisibilityChange);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [initParticles]);
+  }, [initParticles, lite]);
 
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div className={`pointer-events-none fixed inset-0 z-0 overflow-hidden ${lite ? "ambient-lite" : ""}`}>
       <div className="ambient-grid" />
       <div className="ambient-orb ambient-orb-a" />
       <div className="ambient-orb ambient-orb-b" />
@@ -347,7 +353,7 @@ export default function ParticleBackground() {
       <div className="ambient-orb ambient-orb-e" />
       <div className="ambient-orb ambient-orb-f" />
       <div className="ambient-orb ambient-orb-g" />
-      <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />
+      {!lite && <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />}
       <div className="ambient-vignette" />
     </div>
   );

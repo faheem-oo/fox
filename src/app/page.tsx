@@ -23,6 +23,22 @@ const ParticleBackground = dynamic(
 
 export default function Home() {
   const [loaderDone, setLoaderDone] = useState(false);
+  const [liteMode, setLiteMode] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    const nav = navigator as Navigator & {
+      connection?: { saveData?: boolean };
+    };
+    const coarse =
+      window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768;
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const lowPowerDevice = (navigator.hardwareConcurrency ?? 8) <= 4;
+    const saveData = Boolean(nav.connection?.saveData);
+
+    return coarse || reducedMotion || lowPowerDevice || saveData;
+  });
   const [coarsePointer, setCoarsePointer] = useState(() => {
     if (typeof window === "undefined") return false;
 
@@ -33,20 +49,35 @@ export default function Home() {
 
   useEffect(() => {
     const pointerMedia = window.matchMedia("(pointer: coarse)");
+    const reducedMotionMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-    const updatePointerMode = () => {
+    const updateDeviceMode = () => {
       const nextValue = pointerMedia.matches || window.innerWidth < 768;
       setCoarsePointer((previous) =>
         previous === nextValue ? previous : nextValue
       );
+
+      const nav = navigator as Navigator & {
+        connection?: { saveData?: boolean };
+      };
+      const reducedMotion = reducedMotionMedia.matches;
+      const lowPowerDevice = (navigator.hardwareConcurrency ?? 8) <= 4;
+      const saveData = Boolean(nav.connection?.saveData);
+      const nextLiteMode = nextValue || reducedMotion || lowPowerDevice || saveData;
+
+      setLiteMode((previous) =>
+        previous === nextLiteMode ? previous : nextLiteMode
+      );
     };
 
-    pointerMedia.addEventListener("change", updatePointerMode);
-    window.addEventListener("resize", updatePointerMode);
+    pointerMedia.addEventListener("change", updateDeviceMode);
+    reducedMotionMedia.addEventListener("change", updateDeviceMode);
+    window.addEventListener("resize", updateDeviceMode);
 
     return () => {
-      pointerMedia.removeEventListener("change", updatePointerMode);
-      window.removeEventListener("resize", updatePointerMode);
+      pointerMedia.removeEventListener("change", updateDeviceMode);
+      reducedMotionMedia.removeEventListener("change", updateDeviceMode);
+      window.removeEventListener("resize", updateDeviceMode);
     };
   }, []);
 
@@ -59,9 +90,9 @@ export default function Home() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.35, ease: "easeOut" }}
+          transition={{ duration: liteMode ? 0.25 : 0.35, ease: "easeOut" }}
         >
-          <ParticleBackground />
+          <ParticleBackground lite={liteMode} />
         </motion.div>
       )}
 
@@ -69,10 +100,10 @@ export default function Home() {
         initial={false}
         animate={
           loaderDone
-            ? { opacity: 1, y: 0, filter: "blur(0px)" }
-            : { opacity: 0.88, y: 4, filter: "blur(1px)" }
+            ? { opacity: 1, y: 0 }
+            : { opacity: 0.92, y: 2 }
         }
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: liteMode ? 0.35 : 0.5, ease: [0.22, 1, 0.36, 1] }}
         style={{ pointerEvents: loaderDone ? "auto" : "none" }}
       >
         <Navbar />
