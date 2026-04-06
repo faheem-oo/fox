@@ -317,11 +317,12 @@ body {
 }
 
 .ambient-lite .ambient-orb {
-  animation-name: ambient-orb-float;
+  animation-name: ambient-orb-float-lite;
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
-  filter: blur(44px);
-  opacity: 0.24;
+  animation-duration: 20s;
+  filter: blur(38px);
+  opacity: 0.3;
 }
 
 .ambient-lite .ambient-vignette {
@@ -360,6 +361,22 @@ body {
   }
 }
 
+@keyframes ambient-orb-float-lite {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.28;
+  }
+  35% {
+    transform: translate3d(7%, -8%, 0) scale(1.08);
+    opacity: 0.4;
+  }
+  70% {
+    transform: translate3d(-6%, 7%, 0) scale(0.92);
+    opacity: 0.24;
+  }
+}
+
 @media (max-width: 768px) {
   .ambient-grid {
     opacity: 0.2;
@@ -370,6 +387,23 @@ body {
   .ambient-orb {
     filter: blur(66px);
     opacity: 0.32;
+  }
+
+  .ambient-lite .ambient-orb {
+    filter: blur(34px);
+    opacity: 0.34;
+    animation-duration: 15s;
+  }
+
+  .ambient-lite .ambient-orb-a,
+  .ambient-lite .ambient-orb-b,
+  .ambient-lite .ambient-orb-c,
+  .ambient-lite .ambient-orb-d,
+  .ambient-lite .ambient-orb-e,
+  .ambient-lite .ambient-orb-f,
+  .ambient-lite .ambient-orb-g {
+    width: clamp(180px, 54vw, 280px);
+    height: clamp(180px, 54vw, 280px);
   }
 
   .skills-track {
@@ -420,6 +454,13 @@ body {
     filter: blur(58px);
     opacity: 0.24;
     animation-duration: 24s;
+  }
+
+  .ambient-lite .ambient-orb {
+    animation-name: ambient-orb-float-lite;
+    animation-duration: 16s;
+    filter: blur(34px);
+    opacity: 0.33;
   }
 
   .skills-card:hover {
