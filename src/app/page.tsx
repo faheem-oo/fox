@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import Loader from "@/components/Loader";
+import ParticleBackground from "@/components/ParticleBackground";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
@@ -16,15 +17,11 @@ import Contact from "@/components/Contact";
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), {
   ssr: false,
 });
-const ParticleBackground = dynamic(
-  () => import("@/components/ParticleBackground"),
-  { ssr: false }
-);
 
 export default function Home() {
   const [loaderDone, setLoaderDone] = useState(false);
   const [liteMode, setLiteMode] = useState(() => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === "undefined") return true;
 
     const nav = navigator as Navigator & {
       connection?: { saveData?: boolean };
@@ -40,7 +37,7 @@ export default function Home() {
     return coarse || reducedMotion || lowPowerDevice || saveData;
   });
   const [coarsePointer, setCoarsePointer] = useState(() => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === "undefined") return true;
 
     return (
       window.matchMedia("(pointer: coarse)").matches || window.innerWidth < 768
@@ -85,16 +82,8 @@ export default function Home() {
     <>
       <Loader onComplete={() => setLoaderDone(true)} />
 
+      <ParticleBackground lite={liteMode} />
       {loaderDone && !coarsePointer && <CustomCursor />}
-      {loaderDone && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: liteMode ? 0.25 : 0.35, ease: "easeOut" }}
-        >
-          <ParticleBackground lite={liteMode} />
-        </motion.div>
-      )}
 
       <motion.div
         initial={false}
