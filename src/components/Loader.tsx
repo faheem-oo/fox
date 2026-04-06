@@ -21,7 +21,7 @@ export default function Loader({ onComplete }: LoaderProps) {
       ? 900
       : compactScreen || lowPowerDevice
         ? 1850
-        : 3000;
+        : 2700;
 
     const timer = setTimeout(() => setLoading(false), hideAfter);
     return () => clearTimeout(timer);

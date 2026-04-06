@@ -317,9 +317,11 @@ body {
 }
 
 .ambient-lite .ambient-orb {
-  animation: none;
+  animation-name: ambient-orb-float;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
   filter: blur(44px);
-  opacity: 0.2;
+  opacity: 0.24;
 }
 
 .ambient-lite .ambient-vignette {
