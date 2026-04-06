@@ -4,7 +4,11 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-export default function Loader() {
+interface LoaderProps {
+  onComplete?: () => void;
+}
+
+export default function Loader({ onComplete }: LoaderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -23,8 +27,19 @@ export default function Loader() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    if (!loading) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [loading]);
+
   return (
-    <AnimatePresence>
+    <AnimatePresence onExitComplete={onComplete}>
       {loading && (
         <motion.div
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-fox-bg"
